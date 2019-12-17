@@ -1,0 +1,8 @@
+version: "3.5"
+services:
+  juice-shop:
+    container_name: juice-shop
+    image: tkluu10/juice-shop
+    ports:
+      - "3000:3000"
+    restart: always
