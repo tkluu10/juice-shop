@@ -157,8 +157,7 @@
     "sinon-chai": "^3.3.0",
     "socket.io-client": "^2.3.0",
     "standard": "^14.3.1",
-    "webdriver-manager": "^12.1.7",
-    "sonarqube-scanner": "^2.5.0"
+    "webdriver-manager": "^12.1.7"
   },
   "repository": {
     "type": "git",
