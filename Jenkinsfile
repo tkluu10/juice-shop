@@ -19,18 +19,18 @@ pipeline {
                 docker { image 'node:12' }
             }
             steps {
-                echo 'Performing static code analysis...'
-                sh 'npm install -g sonarqube-scanner'
-                sh 'sonar-scanner -Dsonar.host.url=${sonarURL} -Dsonar.login=${sonarToken}'
+                withSonarQubeEnv('sonarqube') {
+                    echo 'Performing static code analysis...'
+                    sh 'npm install -g sonarqube-scanner'
+                    sh 'sonar-scanner -Dsonar.host.url=${sonarURL} -Dsonar.login=${sonarToken}'
+                }
             }
         }
         stage('Quality Gate') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    echo 'Checking Quality Gate...'
-                    timeout(time: 10, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
+                echo 'Checking Quality Gate...'
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
