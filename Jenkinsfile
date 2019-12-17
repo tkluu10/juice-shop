@@ -1,7 +1,7 @@
 pipeline {
     environment {
         sonarURL = "http://sheikah-server:9000"
-        sonarToken = "0693ce12736d22b004cedab01264dde06a7e718b"
+        sonarToken = "892de426b297642ede2a4dcdbd2d9cb8850774d8"
         registry = "tkluu10/juice-shop"
         registryCredential = 'dockerhub'
         dockerImage = ''
@@ -14,7 +14,7 @@ pipeline {
                 git 'https://github.com/tkluu10/juice-shop.git'
             }
         }
-        stage("Code Analysis") {
+        stage('Code Analysis') {
             agent {
                 docker { image 'node:12' }
             }
@@ -24,7 +24,15 @@ pipeline {
                 sh 'sonar-scanner -Dsonar.host.url=${sonarURL} -Dsonar.login=${sonarToken}'
             }
         }
-        stage('Build Image') {
+        stage('Quality Gate') {
+            steps {
+                echo 'Checking Quality Gate...'
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+/*         stage('Build Image') {
             steps{
                 echo "Building image..."
                 script {
@@ -55,6 +63,6 @@ pipeline {
                     sh 'ssh -o StrictHostKeyChecking=no ec2-user@$staging_ip ./deploy.sh'
                 }
             }
-        }
+        } */
     }
 }
