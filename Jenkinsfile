@@ -1,7 +1,7 @@
 pipeline {
     environment {
         stage_server = "3.230.148.253"
-        sonarURL = "http://192.168.1.162:9000/"
+        sonarURL = "http://localhost:9000/"
         sonarToken = "22a0a7b129d8cceb3dd3c14a327b78672939c763"
         registry = "tkluu10/juice-shop"
         registryCredential = 'dockerhub'
