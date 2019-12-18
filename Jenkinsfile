@@ -1,6 +1,7 @@
 pipeline {
     environment {
-        sonarURL = "http://sonarqube-sonarqube-insecure.192.168.99.107.nip.io/"
+        stage_server = "3.230.148.253"
+        sonarURL = "http://sonarqube.192.168.99.107.nip.io/"
         sonarToken = "4fca647870684f39e3c8852f65e3f2795b229dbc"
         registry = "tkluu10/juice-shop"
         registryCredential = 'dockerhub'
@@ -62,7 +63,7 @@ pipeline {
             steps {
                 echo "Deploying to staging server..."
                 sshagent(credentials : ['staging_server']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@$staging_ip ./deploy.sh'
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@${stage_server} ./deploy.sh'
                 }
             }
         } */
