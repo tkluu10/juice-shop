@@ -1,7 +1,7 @@
 pipeline {
     environment {
-        staging_user ="ec2-user"
-        staging_ip = "3.226.251.111"
+        staging_user ="link"
+        staging_ip = "192.168.1.163"
         sonarURL = "http://192.168.1.162:9000/"
         sonarToken = "22a0a7b129d8cceb3dd3c14a327b78672939c763"
         registry = "tkluu10/juice-shop"
@@ -64,7 +64,7 @@ pipeline {
         stage('Deploy to Staging Environment') {
             steps {
                 echo "Deploying to staging server..."
-                sshagent(credentials : ['staging_login']) {
+                sshagent(credentials : ['sheikah-server']) {
                     sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} ./deploy.sh'
                 }
             }
@@ -72,7 +72,7 @@ pipeline {
         stage('DAST') {
             steps {
                 echo "Running ZAP baseline scan..."
-                sshagent(credentials : ['staging_login']) {
+                sshagent(credentials : ['sheikah-server']) {
                     sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} "docker run -t owasp/zap2docker-stable zap-baseline.py -t http://${staging_ip}:3000 || true "'
                 }
             }
