@@ -1,8 +1,8 @@
 pipeline {
     environment {
         stage_server = "3.230.148.253"
-        sonarURL = "http://sheikah-server:9000/"
-        sonarToken = "bea4127924e6310b3461f38aa7472e19e78e77b1"
+        sonarURL = "http://localhost:9000/"
+        sonarToken = "22a0a7b129d8cceb3dd3c14a327b78672939c763"
         registry = "tkluu10/juice-shop"
         registryCredential = 'dockerhub'
         dockerImage = ''
