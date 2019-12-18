@@ -1,6 +1,7 @@
 pipeline {
     environment {
-        staging_ip = "3.230.148.253"
+        staging_user ="link"
+        staging_ip = "192.169.1.163"
         sonarURL = "http://192.168.1.162:9000/"
         sonarToken = "22a0a7b129d8cceb3dd3c14a327b78672939c763"
         registry = "tkluu10/juice-shop"
@@ -9,13 +10,13 @@ pipeline {
     }
     agent any
     stages {
-        stage('Clone') {
+        stage('Clone Repository') {
             steps {
                 echo 'Cloning repository...'
                 git 'https://github.com/tkluu10/juice-shop.git'
             }
         }
-        stage('Code Analysis') {
+        stage('SAST') {
             agent {
                 docker { image 'node:12' }
             }
@@ -36,7 +37,7 @@ pipeline {
                 }
             }
         }
-        stage('Build Image') {
+        stage('Build Docker Image') {
             steps{
                 echo "Building image..."
                 script {
@@ -44,12 +45,12 @@ pipeline {
                 }
             }
         }
-        stage('Test Image') {
+        stage('Test Docker Image') {
             steps {
                 echo 'Testing image...'
             }
         }
-        stage('Push Image') {
+        stage('Push Docker Image') {
             steps {
                 echo 'Pushing image to DockerHub...'
                 script {
@@ -60,11 +61,19 @@ pipeline {
                 }
             }
         }
-        stage('Deploy Image') {
+        stage('Deploy to Staging Environment') {
             steps {
                 echo "Deploying to staging server..."
-                sshagent(credentials : ['staging_login']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@${staging_ip} ./deploy.sh'
+                sshagent(credentials : ['staging_username_pw']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} ./deploy.sh'
+                }
+            }
+        }
+        stage('DAST') {
+            steps {
+                echo "Running ZAP baseline scan..."
+                sshagent(credentials : ['staging_username_pw']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} "docker run -t owasp/zap2docker-stable zap-baseline.py -t ${staging_ip}:3000"'
                 }
             }
         }
