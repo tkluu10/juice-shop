@@ -65,7 +65,7 @@ pipeline {
             steps {
                 echo "Deploying to staging server..."
                 sshagent(credentials : ['staging_username_pw']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} ./deploy.sh'
+                    sh 'ssh ${staging_user}@${staging_ip} ./deploy.sh'
                 }
             }
         }
@@ -73,7 +73,7 @@ pipeline {
             steps {
                 echo "Running ZAP baseline scan..."
                 sshagent(credentials : ['staging_username_pw']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} "docker run -t owasp/zap2docker-stable zap-baseline.py -t ${staging_ip}:3000 || true "'
+                    sh 'ssh ${staging_user}@${staging_ip} "docker run -t owasp/zap2docker-stable zap-baseline.py -t ${staging_ip}:3000 || true "'
                 }
             }
         }
