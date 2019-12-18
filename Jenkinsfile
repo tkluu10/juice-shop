@@ -73,8 +73,8 @@ pipeline {
             steps {
                 echo "Running ZAP baseline scan..."
                 sshagent(credentials : ['sheikah-server']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} "docker run -t owasp/zap2docker-stable zap-baseline.py -t http://${staging_ip}:3000 || true "'
-                    // sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} "docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://${staging_ip}:3000 -r report.html || true "'
+                 //   sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} "docker run -t owasp/zap2docker-stable zap-baseline.py -t http://${staging_ip}:3000 || true "'
+                    sh 'ssh -o StrictHostKeyChecking=no ${staging_user}@${staging_ip} "docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://${staging_ip}:3000 -r report.html || true "'
                 }
             }
         }
