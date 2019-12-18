@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        stage_server = "3.230.148.253"
+        staging_ip = "3.230.148.253"
         sonarURL = "http://192.168.1.162:9000/"
         sonarToken = "22a0a7b129d8cceb3dd3c14a327b78672939c763"
         registry = "tkluu10/juice-shop"
@@ -30,13 +30,13 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 echo 'Checking Quality Gate...'
-                sleep(time: 10, unit: 'SECONDS')
+                sleep(time: 5, unit: 'SECONDS')
                 timeout(time: 10, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
-/*         stage('Build Image') {
+        stage('Build Image') {
             steps{
                 echo "Building image..."
                 script {
@@ -63,10 +63,10 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 echo "Deploying to staging server..."
-                sshagent(credentials : ['staging_server']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@${stage_server} ./deploy.sh'
+                sshagent(credentials : ['staging_login']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@${staging_ip} ./deploy.sh'
                 }
             }
-        } */
+        }
     }
 }
