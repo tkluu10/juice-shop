@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        staging_user ="ec2-user"
+        staging_user ="link"
         staging_ip = "192.168.1.163"
         sonarURL = "http://192.168.1.162:9000/"
         sonarToken = "22a0a7b129d8cceb3dd3c14a327b78672939c763"
